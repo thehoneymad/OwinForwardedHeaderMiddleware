@@ -5,6 +5,9 @@
     using System.Linq;
     using Microsoft.Owin;
 
+    /// <summary>
+    /// Http X-Forwarded-* headers implementation according to most seen implementations around
+    /// </summary>
     public class XForwardedHeaders : IForwardedHeaders
     {
         private const string XForwardedForHeaderName = "X-Forwarded-For";
@@ -17,28 +20,41 @@
         private IList<string> ForwardedProtocol { get; set; }
         private IList<string> ForwardedFor { get; set; }
 
+        /// <summary>
+        /// Creates a new instance of X-Forwarded-* compliant forwarded header implementation
+        /// </summary>
+        /// <param name="request">Current IOwinRequest</param>
+        /// <param name="options">Forwarded headers options</param>
         public XForwardedHeaders(IOwinRequest request, ForwardedHeadersOptions options)
         {
             ProcessForwardedHeaders(request, options);
         }
 
+        /// <inheritDoc/>
+        public int? ForwardedPort { get; set; }
+
+        /// <inheritDoc/>
+        public List<ForwarderSet> Forwarders { get; set; }
+
+        /// <inheritDoc/>
         public IHeaderDictionary ApplyForwardedHeaders(IOwinRequest request)
         {
-            var firstForwarderSet = this.Forwarders?.FirstOrDefault();
+            var firstForwarderSet = this.Forwarders?.LastOrDefault();
             if (firstForwarderSet == null) return request.Headers;
 
-            request.Scheme = firstForwarderSet.Value.Scheme;
+            if (!String.IsNullOrWhiteSpace(firstForwarderSet.Value.Scheme))
+                request.Scheme = firstForwarderSet.Value.Scheme;
 
+            var host = request.Host;
             if (!string.IsNullOrWhiteSpace(firstForwarderSet.Value.Host))
-                request.Host = new HostString(firstForwarderSet.Value.Host);
+                host = new HostString(firstForwarderSet.Value.Host);
 
             var port = this.ForwardedPort;
             if (port != null)
             {
                 request.RemotePort = port;
 
-                var host = request.Host.Value;
-                var pos = host.IndexOf(':');
+                var pos = host.Value.IndexOf(':');
 
                 /* INFO: If the following two lines confuses anyone as it did confuse me
                  * the gist is the following: 
@@ -50,10 +66,11 @@
                  * 
                  * And yes, I know, it confused me too.
                  * */
-                var hostString = pos == -1 ? host : host.Substring(0, pos);
-                request.Host = new HostString($"{hostString}:{port}");
+                var hostString = pos == -1 ? host.Value : host.Value.Substring(0, pos);
+                host = new HostString($"{hostString}:{port}");
             }
 
+            request.Host = host;
             request.RemoteIpAddress = firstForwarderSet.Value.RemoteIpAndPort;
             return request.Headers;
         }
@@ -72,13 +89,13 @@
             ForwardedProtocol = protocolKeyValue.Value;
 
             if (options.RequireHeaderSymmetry && (ForwardedFor?.Count() != ForwardedProtocol?.Count()))
-                throw new NotSupportedException($"Parameter count mismatch between {XForwardedForHeaderName} and {protocolKeyValue.Key} ");
+                throw new HeaderSymmetryException($"Parameter count mismatch between {XForwardedForHeaderName} and {protocolKeyValue.Key} ");
 
             ForwardedHost = request.Headers.GetCommaSeparatedValues(XForwardedHostHeaderName);
             if (options.RequireHeaderSymmetry
                 && (ForwardedFor?.Count() != ForwardedHost?.Count()
                        || ForwardedProtocol?.Count() != ForwardedHost?.Count()))
-                throw new NotSupportedException($"Parameter count mismatch between {XForwardedHostHeaderName} and {protocolKeyValue.Key} or {XForwardedForHeaderName}");
+                throw new HeaderSymmetryException($"Parameter count mismatch between {XForwardedHostHeaderName} and {protocolKeyValue.Key} or {XForwardedForHeaderName}");
 
             if (ForwardedHost != null)
                 entryCount = Math.Max(ForwardedHost.Count(), entryCount);
@@ -133,7 +150,5 @@
             return default(KeyValuePair<string, IList<string>>);
         }
 
-        public int? ForwardedPort { get; set; }
-        public List<ForwarderSet> Forwarders { get; set; }
     }
 }

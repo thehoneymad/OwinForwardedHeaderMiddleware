@@ -5,6 +5,11 @@
     using System.Threading.Tasks;
     using Microsoft.Owin;
 
+    /// <summary>
+    /// Owin Middleware that can be used to handle requests forwarded by load balancers.
+    /// Code originally taken from StoryHub
+    /// Handles X-Forwarded-Proto, X-Forwarded-Port 
+    /// </summary>
     public class ForwardedHeadersHandler : OwinMiddleware
     {
         private const string ForwardedHeaderName = "Forwarded";

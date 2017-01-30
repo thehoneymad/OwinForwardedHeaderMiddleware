@@ -3,7 +3,6 @@
 namespace NerdCats.Owin
 {
     using System;
-    using Owin;
 
     public static class ForwardedHeadersExtensions
     {

@@ -4,6 +4,9 @@
     using System.Collections.Generic;
     using Microsoft.Owin;
 
+    /// <summary>
+    /// Simple Owin extension methods to make life easier
+    /// </summary>
     public static class OwinExtensions
     {
         public static void UpdateRequestHeaders(this IOwinContext context, IHeaderDictionary headers)

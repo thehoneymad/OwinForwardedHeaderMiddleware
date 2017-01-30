@@ -54,6 +54,8 @@
     <Compile Include="ForwardedHeadersOptions.cs" />
     <Compile Include="ForwarderSet.cs" />
     <Compile Include="ForwardHeaderStandard.cs" />
+    <Compile Include="HeaderFormatException.cs" />
+    <Compile Include="HeaderSymmetryException.cs" />
     <Compile Include="IForwardedHeaders.cs" />
     <Compile Include="OwinExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
