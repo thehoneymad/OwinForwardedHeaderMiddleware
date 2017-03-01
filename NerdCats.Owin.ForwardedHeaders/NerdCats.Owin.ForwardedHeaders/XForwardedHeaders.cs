@@ -50,7 +50,7 @@
                 host = new HostString(firstForwarderSet.Value.Host);
 
             var port = this.ForwardedPort;
-            if (port != null)
+            if (port != null && port != 80)
             {
                 request.RemotePort = port;
 
