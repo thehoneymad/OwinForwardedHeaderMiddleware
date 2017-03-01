@@ -14,13 +14,13 @@ assembly_info:
   assembly_file_version: '{version}'
   assembly_informational_version: '{version}'
 before_build:
-    - cmd: nuget restore NerdCats.Owin.ForwardedHeaders.sln
+    - cmd: nuget restore NerdCats.Owin.ForwardedHeaders/NerdCats.Owin.ForwardedHeaders.sln
 build:
-  project: NerdCats.Owin.ForwardedHeaders.sln
+  project: NerdCats.Owin.ForwardedHeaders/NerdCats.Owin.ForwardedHeaders.sln
   verbosity: minimal
 deploy_script:
-  - cmd: nuget pack NerdCats.Owin.ForwardedHeaders/NerdCats.Owin.ForwardedHeaders.nuspec -Version %appveyor_build_version%
-  - cmd: nuget push NerdCats.Owin.ForwardedHeaders.%appveyor_build_version%.nupkg welovecats -Source http://nerdcatsnugetserver.azurewebsites.net/api/v2/package -verbosity detailed
+  - cmd: nuget pack NerdCats.Owin.ForwardedHeaders/NerdCats.Owin.ForwardedHeaders/NerdCats.Owin.ForwardedHeaders.nuspec -Version %appveyor_build_version%
+  - cmd: nuget push NerdCats.Owin.ForwardedHeaders/NerdCats.Owin.ForwardedHeaders.%appveyor_build_version%.nupkg welovecats -Source http://nerdcatsnugetserver.azurewebsites.net/api/v2/package -verbosity detailed
 notifications:
 - provider: Slack
   incoming_webhook: https://hooks.slack.com/services/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
