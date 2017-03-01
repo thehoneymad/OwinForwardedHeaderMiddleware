@@ -1,0 +1,30 @@
+version: 1.0.{build}
+pull_requests:
+  do_not_increment_build_number: true
+branches:
+  only:
+  - master
+configuration: Release
+platform: Any CPU
+clone_depth: 10
+assembly_info:
+  patch: true
+  file: '**\AssemblyInfo.*'
+  assembly_version: '{version}'
+  assembly_file_version: '{version}'
+  assembly_informational_version: '{version}'
+before_build:
+    - cmd: nuget restore NerdCats.Owin.ForwardedHeaders.sln
+build:
+  project: NerdCats.Owin.ForwardedHeaders.sln
+  verbosity: minimal
+deploy_script:
+  - cmd: nuget pack NerdCats.Owin.ForwardedHeaders/NerdCats.Owin.ForwardedHeaders.nuspec -Version %appveyor_build_version%
+  - cmd: nuget push NerdCats.Owin.ForwardedHeaders.%appveyor_build_version%.nupkg welovecats -Source http://nerdcatsnugetserver.azurewebsites.net/api/v2/package -verbosity detailed
+notifications:
+- provider: Slack
+  incoming_webhook: https://hooks.slack.com/services/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
+  channel: '#builds'
+  on_build_success: true
+  on_build_failure: true
+  on_build_status_changed: true

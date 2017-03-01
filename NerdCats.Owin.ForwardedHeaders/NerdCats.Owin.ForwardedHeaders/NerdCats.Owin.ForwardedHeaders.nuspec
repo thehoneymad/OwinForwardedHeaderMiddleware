@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>NerdCats.Owin.ForwardedHeaders</id>
+    <version>0.0</version>
+    <title>X-Forwarded-* proxy header and RFC-7234 compliant forwarded headers</title>
+    <authors>Swagata Prateek (NerdCats)</authors>
+    <owners>Swagata Prateek (NerdCats)</owners>
+    <projectUrl>https://github.com/thehoneymad/OwinForwardedHeaderMiddleware</projectUrl>
+      <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>
+        OWIN middleware for X-Forwarded-* proxy header and RFC-7234 compliant forwarded headers.
+    </description>
+    <summary>OWIN middleware for X-Forwarded-* proxy header and RFC-7234 compliant forwarded headers.</summary>
+    <copyright>Copyright 2016, 2017</copyright>
+    <tags>Web API WebAPI Owin XForwarded Forwarded</tags>
+    <dependencies>
+        <dependency id="Microsoft.Owin" version="3.0.1"/>
+        <dependency id="Owin" version="1.0"/>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="bin\Release\NerdCats.Owin.ForwardedHeaders.dll" target="lib\net45\NerdCats.Owin.ForwardedHeaders.dll" />
+  </files>
+</package>
