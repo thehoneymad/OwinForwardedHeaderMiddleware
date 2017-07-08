@@ -1,5 +1,7 @@
 # RFC-7239 compliant reverse-proxy middleware for OWIN
 
+[![Build status](https://ci.appveyor.com/api/projects/status/vsb5po5kfx3et117?svg=true)](https://ci.appveyor.com/project/thehoneymad/owinforwardedheadermiddleware)
+
 To use the middleware in a OWIN startup:
 
         public void Configuration(IAppBuilder app)
