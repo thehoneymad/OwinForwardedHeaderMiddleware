@@ -1,4 +1,4 @@
-# RFC-7234 compliant reverse-proxy middleware for OWIN
+# RFC-7239 compliant reverse-proxy middleware for OWIN
 
 To use the middleware in a OWIN startup:
 
